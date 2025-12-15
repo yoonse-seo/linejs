@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@evex/linejs": "npm:@jsr/evex__linejs@^2.2.0"
+  }
+}
