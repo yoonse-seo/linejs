@@ -1,5 +1,9 @@
 {
   "dependencies": {
-    "@evex/linejs": "npm:@jsr/evex__linejs@^2.2.0"
+    "@evex/linejs": "npm:@jsr/evex__linejs@^2.2.0",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3"
   }
 }

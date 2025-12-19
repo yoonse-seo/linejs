@@ -1,27 +1,35 @@
+// === How to Use ===
+// npx tsx example/talk/read-event.ts
+
 import {
 	loginWithAuthToken,
 	loginWithPassword,
 } from "@evex/linejs";
+import dotenv from "dotenv";
+dotenv.config();
 import { FileStorage } from "@evex/linejs/storage";
 
 async function main() {
 	// === 初回のみ: メールログイン ===
 	const client = await loginWithPassword({
-		email: "jhgncptv.416@gmail.com",
-		password: "nowfyg-9sopba-Sexzac",
+		email: process.env.EMAIL ?? "",
+		password: process.env.PASSWORD ?? "",
 		onPincodeRequest(pin) {
 			console.log("PIN:", pin);
 		},
 	}, {
 		device: "DESKTOPWIN",
+		// device: "IOS",
+
+		// device: "DESKTOPMAC",
 		storage: new FileStorage("./storage.json"),
 	});
 
 	// AuthTokenを取得して保存
-	client.base.on("update:authtoken", (authtoken) => {
-		console.log("AuthToken:", authtoken);
-		// ここでファイルなどに保存しておく
-	});
+	// client.base.on("update:authtoken", (authtoken) => {
+	// 	console.log("AuthToken:", authtoken);
+	// 	// ここでファイルなどに保存しておく
+	// });
 
 	// 現在のAuthTokenを表示
 	// console.log("\n★★★ 現在のAuthToken ★★★");
@@ -31,9 +39,8 @@ async function main() {
 	// 既読イベントをリッスン
 	client.on("event", async (event) => {
 		if (event.type === "NOTIFIED_READ_MESSAGE") {
-			const userMid = event.param2;
             console.log("=== 既読通知 ===");
-            console.log(`既読したユーザーMID: ${userMid}`);
+            console.log(`既読したユーザーMID: ${event.param2}`);
             console.log(`チャットMID: ${event.param1}`);
             console.log(`メッセージID: ${event.param3}`);
 		}
@@ -42,6 +49,7 @@ async function main() {
 	// メッセージも受信する場合
 	client.on("message", async (message) => {
 		console.log(`\n[メッセージ] ${message.text}`);
+		console.log(`送信者MID: ${message.from.id}`)
 	});
 
 	client.listen({ talk: true });
